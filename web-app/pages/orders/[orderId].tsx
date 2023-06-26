@@ -88,8 +88,6 @@ const OrderPage: NextPage = () => {
   const handleConfirmOrder = useCallback(async () => {
     if (!safeAddress || !signer || !safe || !user || !order) return;
 
-    // The address of the token contract
-
     // Create an instance of the contract
     const tokenContract = new ethers.Contract(
         PAYMENT_TOKEN_CONTRACT_ADDRESS,
@@ -100,7 +98,7 @@ const OrderPage: NextPage = () => {
     // Specify the recipient and the amount
     const recipient = order.data.order.polygon_address;
     const amount = ethers.utils.parseUnits(
-        order.data.order.usdt_amount.toFixed(PAYMENT_TOKEN_DECIMALS).toString(),
+        order.data.order.usdt_amount.toFixed(PAYMENT_TOKEN_DECIMALS),
         PAYMENT_TOKEN_DECIMALS,
     );
 

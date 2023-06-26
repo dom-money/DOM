@@ -38,7 +38,12 @@ const useAuth = () => {
   const { setIsAuthLoaded } = useGlobalLoadingContext();
   const router = useRouter();
   const relayAdapter = useRelayAdapter();
-  const { setSafeService, setSafe, setSafeAddress } = useSafeActions();
+  const {
+    setSafeService,
+    setSafe,
+    setSafeAddress,
+    setEthAdapter,
+  } = useSafeActions();
 
   const effectCalled = useRef(false);
 
@@ -116,8 +121,9 @@ const useAuth = () => {
       ethAdapter,
     });
 
-    // Setting safeService as global state
+    // Setting safeService and ethAdapter as global state
     setSafeService(safeService);
+    setEthAdapter(ethAdapter);
 
     const { safes } = await safeService.getSafesByOwner(walletAddress);
 
@@ -145,7 +151,7 @@ const useAuth = () => {
     setSafeAddress(safeAddress);
 
     console.log('Loaded Safe:', safeAddress);
-  }, [ relayAdapter, setSafeService, setSafe, setSafeAddress ]);
+  }, [ relayAdapter, setSafeService, setSafe, setSafeAddress, setEthAdapter ]);
 
   const initUser = useCallback(async (
       web3Auth: Web3Auth,

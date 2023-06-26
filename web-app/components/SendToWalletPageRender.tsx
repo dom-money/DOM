@@ -164,9 +164,8 @@ const SendToWalletPageRender = ({
 
   const handleSubmit = (e:React.FormEvent) => {
     e.preventDefault();
-    if (!sendButtonOnClick) {
-      return;
-    }
+    if (!sendButtonOnClick) return;
+
     sendButtonOnClick();
   };
 
@@ -204,7 +203,6 @@ const SendToWalletPageRender = ({
               primary
               disabled={ !areInputsValid || isSubmitting }
               type='submit'
-              onClick={ sendButtonOnClick }
             />
             <Button
               label='Clear'
