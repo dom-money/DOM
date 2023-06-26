@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 
-import SendToWalletPageRender from '../../components/SendToWalletPageRender';
+import SendToWalletPageRender from '@/components/SendToWalletPageRender';
 
-import AddressQRReader from '../../components/AddressQRReader';
-import PaymentStatus from '../../components/PaymentStatus';
-import useSafeUsdtBalance from '../../hooks/useSafeUsdtBalance';
-import useInputAmount from '../../hooks/useInputAmount';
-import useInputAddress from '../../hooks/useInputAddress';
-import useQRAddressReader from '../../hooks/useQRAddressReader';
-import useSendToWallet from '../../hooks/useSendToWallet';
+import AddressQRReader from '@/components/AddressQRReader';
+import PaymentStatus from '@/components/PaymentStatus';
+import useSafeUsdtBalance from '@/hooks/useSafeUsdtBalance';
+import useInputAmount from '@/hooks/useInputAmount';
+import useInputAddress from '@/hooks/useInputAddress';
+import useQRAddressReader from '@/hooks/useQRAddressReader';
+import useSendFromSafe from '@/hooks/useSendFromSafe';
 
 const SendToWalletPage: NextPage = () => {
   const { data: walletBalance, isLoading, isError } = useSafeUsdtBalance();
@@ -41,42 +41,28 @@ const SendToWalletPage: NextPage = () => {
     handleQRDialogClose,
   ] = useQRAddressReader({ setInputAddress: setInputAddress });
 
-  const [
-    sendToWallet,
-    transactionResult,
-    isTransactionLoading,
-    transactionErrorMessage,
-    handleUseSendToWalletStateClear,
-  ] = useSendToWallet();
+  const sendFromSafe = useSendFromSafe();
 
   const [ isPaymentStatusOpen, setIsPaymentStatusOpen ] = useState(false);
-  const [ preserveState, setPreserveState ] = useState(false);
 
   useEffect(() => {
-    if (transactionResult || transactionErrorMessage) {
+    if (sendFromSafe.isSuccess || sendFromSafe.isError) {
       setIsPaymentStatusOpen(true);
     }
-  }, [ transactionResult, transactionErrorMessage ]);
+  }, [ sendFromSafe.isSuccess, sendFromSafe.isError ]);
 
-  const handleSendToWallet = () => {
-    sendToWallet(inputAmountAsBigNumber, inputAddress);
+  const handleSendFromSafe = () => {
+    sendFromSafe.mutate({
+      amount: inputAmountAsBigNumber,
+      recipient: inputAddress,
+    });
   };
 
   const handlePaymentStatusDrawerClose = (shouldPreserveState?: boolean) => {
-    if (shouldPreserveState) {
-      setPreserveState(true);
-    }
     setIsPaymentStatusOpen(false);
-  };
+    sendFromSafe.reset();
 
-  const handlePaymentStatusDrawerOnExited = () => {
-    if (preserveState) {
-      handleUseSendToWalletStateClear();
-      setPreserveState(false);
-      return;
-    }
-    handleUseSendToWalletStateClear();
-    handleClearInputs();
+    if (!shouldPreserveState) handleClearInputs();
   };
 
   const isSubmitReady = inputAmountIsValid && inputAddessIsValid;
@@ -105,8 +91,8 @@ const SendToWalletPage: NextPage = () => {
         }
         scanQROnClick={ handleQRDialogOpen }
         areInputsValid={ isSubmitReady }
-        isSubmitting={ isTransactionLoading }
-        sendButtonOnClick={ handleSendToWallet }
+        isSubmitting={ sendFromSafe.isLoading }
+        sendButtonOnClick={ handleSendFromSafe }
         clearButtonOnClick={ handleClearInputs }
       />
       <AddressQRReader
@@ -115,28 +101,26 @@ const SendToWalletPage: NextPage = () => {
         onClose={ handleQRDialogClose }
       />
       {
-        transactionResult && !transactionErrorMessage &&
+        sendFromSafe.isSuccess &&
         <PaymentStatus
           type='successful'
           isOpen={ isPaymentStatusOpen }
-          onClose={ () => handlePaymentStatusDrawerClose() }
-          onExited={ handlePaymentStatusDrawerOnExited }
+          onClose={ handlePaymentStatusDrawerClose }
           paymentTo={ inputAddress }
           amount={ inputAmount }
           message='Submitted successfully'
-          sendAgainOnClick={ () => handlePaymentStatusDrawerClose() }
+          sendAgainOnClick={ handlePaymentStatusDrawerClose }
         />
       }
       {
-        transactionErrorMessage && !transactionResult &&
+        sendFromSafe.isError &&
         <PaymentStatus
           type='failed'
           isOpen={ isPaymentStatusOpen }
-          onClose={ () => handlePaymentStatusDrawerClose() }
-          onExited={ handlePaymentStatusDrawerOnExited }
+          onClose={ handlePaymentStatusDrawerClose }
           paymentTo={ inputAddress }
           amount={ inputAmount }
-          errorMessage={ transactionErrorMessage }
+          errorMessage={ sendFromSafe.error.message }
           tryAgainOnClick={ () => handlePaymentStatusDrawerClose(true) }
         />
       }

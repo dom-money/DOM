@@ -1,6 +1,6 @@
 import { GelatoRelayPack } from '@safe-global/relay-kit';
 
-type TaskStatus =
+export type TaskStatus =
   NonNullable<Awaited<ReturnType<GelatoRelayPack['getTaskStatus']>>>;
 
 const pollRelayTaskStatus = async (
@@ -27,19 +27,20 @@ const pollRelayTaskStatus = async (
       'ExecReverted',
       'Blacklisted',
       'Cancelled',
-      'NotFound',
     ].includes(taskStatus.taskState)) {
       throw new Error(taskStatus.taskState);
     };
 
-    if (retryCount >= 10) {
-      throw new Error('Retry limit reached');
-    }
+    if (retryCount >= 10) throw new Error('Retry limit reached');
 
     return retry();
   } catch (err) {
-    return retry();
-  }
+    if (!(err instanceof Error)) throw new Error('Unexpected error');
+
+    if (/Status not found/i.test(err.message)) return retry();
+
+    throw new Error(err.message);
+  };
 };
 
 export default pollRelayTaskStatus;
