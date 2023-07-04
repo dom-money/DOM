@@ -10,7 +10,7 @@ import useWealthBalance from '@/hooks/useWealthBalance';
 import useTransactions from '@/hooks/useTransactions';
 import usePixCodeQRReader from '@/hooks/usePixCodeQRReader';
 import { sumTwoBalancesOfToken } from '@/utils/BigNumberUtils';
-import { DEFAULT_USER } from '@/constants';
+import { DEFAULT_USER, IS_P2P_SERVICE_ENABLED } from '@/constants';
 
 const MainPage: NextPage = () => {
   const { user } = useAuthContext();
@@ -45,7 +45,9 @@ const MainPage: NextPage = () => {
   return (
     <>
       <MainPageRender
-        scanQROnClick={ handleQRDialogOpen }
+        scanQROnClick={
+          IS_P2P_SERVICE_ENABLED ? handleQRDialogOpen : undefined
+        }
         totalBalanceAmount={ totalBalance }
         walletAmount={ walletBalance.data.balanceAsString }
         wealthAmount={ wealthBalance.data.balanceAsString }
@@ -57,11 +59,14 @@ const MainPage: NextPage = () => {
         avatarImageURL={ user.profileImage }
         isSubmitting={ isCreatingOrder }
       />
-      <PixCodeQRReader
-        isOpen={ isQRDialogOpen }
-        onResult={ handleQRReaderResult }
-        onClose={ handleQRDialogClose }
-      />
+      {
+        IS_P2P_SERVICE_ENABLED &&
+        <PixCodeQRReader
+          isOpen={ isQRDialogOpen }
+          onResult={ handleQRReaderResult }
+          onClose={ handleQRDialogClose }
+        />
+      }
     </>
   );
 };
