@@ -12,7 +12,10 @@ import { Signer } from '@/hooks/useAuth';
 import pollRelayTaskStatus from './infra/pollRelayTaskStatus';
 import getRandomSaltNonce from './infra/getRandomSaltNonce';
 import getConstantSaltNonce from './infra/getConstantSaltNonce';
-import { SAFE_PROXY_DEPLOYMENT_SALT_NONCE } from '@/constants';
+import {
+  CHAIN_EXPLORER_URL,
+  SAFE_PROXY_DEPLOYMENT_SALT_NONCE,
+} from '@/constants';
 
 const deploySafe = async (
     ethAdapter: EthersAdapter,
@@ -85,7 +88,7 @@ const deploySafe = async (
 
   console.log([
     'Relay task success!',
-    `https://polygonscan.com/tx/${transactionHash}`,
+    `${CHAIN_EXPLORER_URL}/tx/${transactionHash}`,
   ].join('\n'));
 
   console.log('Waiting for the transaction to be minted...');
@@ -93,7 +96,7 @@ const deploySafe = async (
 
   console.log([
     'Deployed Safe successfully!',
-    `https://polygonscan.com/address/${safeAddress}`,
+    `${CHAIN_EXPLORER_URL}/address/${safeAddress}`,
   ].join('\n'));
   const safeSdk = await Safe.create({ ethAdapter, safeAddress });
 
