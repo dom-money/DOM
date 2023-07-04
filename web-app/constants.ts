@@ -23,6 +23,7 @@ export const CHAIN_ID = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID, 10);
 export const CHAIN_ID_HEX = process.env.NEXT_PUBLIC_CHAIN_ID_HEX;
 export const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET;
 export const CHAIN_EXPLORER_API_URL = process.env.NEXT_PUBLIC_CHAIN_EXPLORER_API_URL;
+export const CHAIN_EXPLORER_URL = process.env.NEXT_PUBLIC_CHAIN_EXPLORER_URL;
 
 // Payment Token
 export const PAYMENT_TOKEN_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_PAYMENT_TOKEN_CONTRACT_ADDRESS;

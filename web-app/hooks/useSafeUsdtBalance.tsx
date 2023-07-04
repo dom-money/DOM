@@ -6,6 +6,7 @@ import SafeApiKit from '@safe-global/api-kit';
 import {
   PAYMENT_TOKEN_CONTRACT_ADDRESS,
   SAFE_TRANSACTION_SERVICE_URL,
+  PAYMENT_TOKEN_DECIMALS,
 } from '@/constants';
 
 type GetSafeUsdtBalance = (
@@ -37,7 +38,7 @@ const getSafeUsdtBalance: GetSafeUsdtBalance = (
           return {
             balanceAsString: '0',
             balanceAsBigNumber: BigNumber.from(0),
-            tokenDecimals: 18,
+            tokenDecimals: PAYMENT_TOKEN_DECIMALS,
           };
         }
 
@@ -59,7 +60,7 @@ const getSafeUsdtBalance: GetSafeUsdtBalance = (
           return {
             balanceAsString: '0',
             balanceAsBigNumber: BigNumber.from(0),
-            tokenDecimals: 18,
+            tokenDecimals: PAYMENT_TOKEN_DECIMALS,
           };
         };
 

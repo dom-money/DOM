@@ -33,7 +33,10 @@ const MainPage: NextPage = () => {
     (transactions.isLoading || transactions.isError) ||
     !user
   ) {
-    return <MainPageRender isLoading userName={ DEFAULT_USER.name } />;
+    return <MainPageRender
+      isLoading
+      userName={ user?.name ?? DEFAULT_USER.name }
+    />;
   };
 
   const totalBalance = sumTwoBalancesOfToken(
