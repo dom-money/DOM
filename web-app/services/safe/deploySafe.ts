@@ -11,6 +11,7 @@ import { RelayTransaction } from '@safe-global/safe-core-sdk-types';
 import { Signer } from '@/hooks/useAuth';
 import pollRelayTaskStatus from './infra/pollRelayTaskStatus';
 import getRandomSaltNonce from './infra/getRandomSaltNonce';
+import getConstantSaltNonce from './infra/getConstantSaltNonce';
 import { SAFE_PROXY_DEPLOYMENT_SALT_NONCE } from '@/constants';
 
 const deploySafe = async (
@@ -45,7 +46,9 @@ const deploySafe = async (
     safeContract,
   });
 
-  const saltNonce = SAFE_PROXY_DEPLOYMENT_SALT_NONCE ?? getRandomSaltNonce();
+  const saltNonce = SAFE_PROXY_DEPLOYMENT_SALT_NONCE ?
+    getConstantSaltNonce() :
+    getRandomSaltNonce();
 
   const safeAddress =
     await safeFactory.predictSafeAddress(safeAccountConfig, saltNonce);
