@@ -159,7 +159,9 @@ const useAuth = () => {
   ) => {
     const signer = initProviderAndSinger(web3AuthProvider);
 
+    setIsAuthLoaded(false);
     await initSafe(signer);
+    setIsAuthLoaded(true);
 
     console.log(await web3Auth.getUserInfo());
 
@@ -167,7 +169,7 @@ const useAuth = () => {
       ...DEFAULT_USER,
       ...await web3Auth.getUserInfo(),
     });
-  }, [ initProviderAndSinger, initSafe ]);
+  }, [ initProviderAndSinger, initSafe, setIsAuthLoaded ]);
 
   useEffect(() => {
     if (effectCalled.current) return;
