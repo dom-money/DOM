@@ -32,3 +32,4 @@ export const DOM_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_DOM_CONTRACT_ADDRESS
 
 // P2P Service API
 export const P2P_SERVICE_API_URL = process.env.NEXT_PUBLIC_P2P_SERVICE_API_URL;
+export const IS_P2P_SERVICE_ENABLED = process.env.NEXT_PUBLIC_IS_P2P_SERVICE_ENABLED === 'true';
