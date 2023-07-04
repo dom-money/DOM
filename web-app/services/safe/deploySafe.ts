@@ -10,6 +10,8 @@ import { GelatoRelayPack } from '@safe-global/relay-kit';
 import { RelayTransaction } from '@safe-global/safe-core-sdk-types';
 import { Signer } from '@/hooks/useAuth';
 import pollRelayTaskStatus from './infra/pollRelayTaskStatus';
+import getRandomSaltNonce from './infra/getRandomSaltNonce';
+import { SAFE_PROXY_DEPLOYMENT_SALT_NONCE } from '@/constants';
 
 const deploySafe = async (
     ethAdapter: EthersAdapter,
@@ -43,18 +45,16 @@ const deploySafe = async (
     safeContract,
   });
 
-  const nonce = (
-    Date.now() * 1000 + Math.floor(Math.random() * 1000)
-  ).toString();
+  const saltNonce = SAFE_PROXY_DEPLOYMENT_SALT_NONCE ?? getRandomSaltNonce();
 
   const safeAddress =
-    await safeFactory.predictSafeAddress(safeAccountConfig, nonce);
+    await safeFactory.predictSafeAddress(safeAccountConfig, saltNonce);
 
   const encodedCreateProxyWithNonce =
     safeProxyFactoryContract.encode('createProxyWithNonce', [
       safeContract.getAddress(),
       initializer,
-      nonce,
+      saltNonce,
     ]);
 
   console.log('Creating gasless transaction...');
