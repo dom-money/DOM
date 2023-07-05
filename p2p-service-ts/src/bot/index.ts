@@ -69,7 +69,7 @@ class BotService {
 
       const qrCodePix = QrCodePix({
         version: '01',
-        key: order.pix_address, //or any PIX key
+        key: order.merchant, //or any PIX key
         name: 'Fulano de Tal',
         city: 'SAO PAULO',
         transactionId: 'YOUR_TRANSACTION_ID', //max 25 characters

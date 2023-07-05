@@ -2,13 +2,13 @@ import React from 'react';
 import type { NextPage } from 'next';
 
 import MainPageRender from '@/components/MainPageRender';
-import PixCodeQRReader from '@/components/PixCodeQRReader';
+import VietQRReader from '@/components/VietQRReader';
 
 import { useAuthContext } from '@/context/AuthContext';
 import useSafeUsdtBalance from '@/hooks/useSafeUsdtBalance';
 import useWealthBalance from '@/hooks/useWealthBalance';
 import useTransactions from '@/hooks/useTransactions';
-import usePixCodeQRReader from '@/hooks/usePixCodeQRReader';
+import useVietQRReader from '@/hooks/useVietQRReader';
 import { sumTwoBalancesOfToken } from '@/utils/BigNumberUtils';
 import { DEFAULT_USER, IS_P2P_SERVICE_ENABLED } from '@/constants';
 
@@ -25,7 +25,7 @@ const MainPage: NextPage = () => {
     handleQRReaderResult,
     handleQRDialogClose,
     isCreatingOrder,
-  ] = usePixCodeQRReader();
+  ] = useVietQRReader();
 
   if (
     (walletBalance.isLoading || walletBalance.isError) ||
@@ -64,7 +64,7 @@ const MainPage: NextPage = () => {
       />
       {
         IS_P2P_SERVICE_ENABLED &&
-        <PixCodeQRReader
+        <VietQRReader
           isOpen={ isQRDialogOpen }
           onResult={ handleQRReaderResult }
           onClose={ handleQRDialogClose }

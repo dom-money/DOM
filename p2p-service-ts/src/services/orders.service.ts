@@ -4,14 +4,14 @@ import { Provider } from '@/interfaces/providers.interface';
 
 export class OrderService {
   public saveOrder(
-    pixAddress: Order['pix_address'],
+    pixAddress: Order['merchant'],
     amount: Order['amount'],
     usdtAmount: Order['usdt_amount'],
     status: Order['status'],
   ): Promise<number> {
     return new Promise((resolve, reject) => {
       const query =
-        'INSERT INTO orders (pix_address, amount, usdt_amount, status) VALUES (?, ?, ?, ?)';
+        'INSERT INTO orders (merchant, amount, usdt_amount, status) VALUES (?, ?, ?, ?)';
       dbService.db.run(query, [pixAddress, amount, usdtAmount, status], function (err) {
         if (err) {
           reject(err);

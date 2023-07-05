@@ -3,7 +3,7 @@ const axios = require("axios");
 const ordersRouter = express.Router();
 const actionsRouter = require("./actions");
 const { ethers } = require("ethers");
-const { parsePix } = require("pix-utils");
+const { QRPay } = require('vietnam-qr-pay');
 const {
   getOrdersByUserAddress,
   getOrderById,
@@ -52,21 +52,19 @@ ordersRouter.post("/", async (req, res) => {
     const publicKeyWithPrefix = "0x" + userPublicKey;
     const userAddress = ethers.computeAddress(publicKeyWithPrefix);
 
-    const parsedQrData = parsePix(qrData);
+    const parsedQrData = new QRPay(qrData);
+    console.log(parsedQrData);
 
-    if (parsedQrData.type === "INVALID") {
+    if (!parsedQrData.isValid || parsedQrData.provider.name !== 'VIETQR') {
       return res.status(400).json({ message: "Invalid qr_data" });
     }
 
-    const pixAddress = parsedQrData.merchantName;
-    const amount = await getTransactionAmount(parsedQrData);
+    const merchant = parsedQrData.consumer.bankNumber;
+    const amount = parseInt(parsedQrData.amount, 10);
 
     // Getting order amount in usdt
-    const response = await axios.get("https://api.huobi.pro/market/trade", {
-      params: { symbol: "usdtbrl" },
-      // headers: { 'Access-Key': process.env.HUOBI_API_KEY }
-    });
-    const rate = response.data.tick.data[0].price;
+    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=vnd");
+    const rate = response.data.tether.vnd;
 
     // Calculate the amount in USDT
     const usdtAmount = amount / rate;
@@ -75,7 +73,7 @@ ordersRouter.post("/", async (req, res) => {
 
     const orderFromDB = await createOrder(
       userAddress,
-      pixAddress,
+      merchant,
       amount,
       usdtAmount,
       priceValidUntil,
@@ -84,6 +82,7 @@ ordersRouter.post("/", async (req, res) => {
 
     res.status(201).json({ order: orderFromDB });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Something went wrong" });
   }
 });
@@ -127,11 +126,8 @@ ordersRouter.get("/:orderId", async (req, res) => {
     new Date(order.price_valid_until) < new Date() &&
     order.status === "created"
   ) {
-    const response = await axios.get("https://api.huobi.pro/market/trade", {
-      params: { symbol: "usdtbrl" },
-      // headers: { 'Access-Key': process.env.HUOBI_API_KEY }
-    });
-    const rate = response.data.tick.data[0].price;
+    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=vnd");
+    const rate = response.data.tether.vnd;
 
     // Calculate the amount in USDT
     const usdtAmount = order.amount / rate;

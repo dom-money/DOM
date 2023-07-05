@@ -42,7 +42,7 @@ class DbService {
       this.db.run(`
           CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            pix_address TEXT NOT NULL,
+            merchant TEXT NOT NULL,
             amount REAL NOT NULL,
             usdt_amount REAL NOT NULL,
             provider_id INTEGER,

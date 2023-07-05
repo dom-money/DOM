@@ -17420,6 +17420,11 @@ victory@^36.6.10:
     victory-voronoi-container "^36.6.10"
     victory-zoom-container "^36.6.10"
 
+vietnam-qr-pay@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vietnam-qr-pay/-/vietnam-qr-pay-1.2.0.tgz#0a64e2d9d199afdfe15348688d3a124faeb0a953"
+  integrity sha512-E/gUC9BVkvXvTYn1dcyGI0//F1iFLWnn4GhupzfkfkVdFgy0Tcl7Nf1EntB7MDKDwdV9JFjNOhsJUaOnTpMz8Q==
+
 vm-browserify@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"

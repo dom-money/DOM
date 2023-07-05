@@ -23,7 +23,7 @@ db.serialize(() => {
   db.run(`
       CREATE TABLE IF NOT EXISTS orders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pix_address TEXT NOT NULL,
+        merchant TEXT NOT NULL,
         amount REAL NOT NULL,
         usdt_amount REAL NOT NULL,
         provider_id INTEGER,
@@ -41,7 +41,7 @@ db.serialize(() => {
     db.run(`
       CREATE TABLE IF NOT EXISTS actions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pix_address TEXT NOT NULL,
+        merchant TEXT NOT NULL,
         amount REAL NOT NULL,
         usdt_amount REAL NOT NULL,
         provider_id INTEGER,
@@ -111,7 +111,7 @@ function createOrder(userAddress, pixAddress, amount, usdtAmount, priceValidUnti
   const status = 'created';
   return new Promise((resolve, reject) => {
     const query =
-      "INSERT INTO orders (user_address, pix_address, amount, usdt_amount, price_valid_until, status, qr_data) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO orders (user_address, merchant, amount, usdt_amount, price_valid_until, status, qr_data) VALUES (?, ?, ?, ?, ?, ?, ?)";
     db.run(query, [userAddress, pixAddress, amount, usdtAmount, priceValidUntil, status, qrData], function (err) {
       if (err) {
         reject(err);
@@ -132,7 +132,7 @@ function createOrder(userAddress, pixAddress, amount, usdtAmount, priceValidUnti
 function saveOrder(pixAddress, amount, usdtAmount, status) {
   return new Promise((resolve, reject) => {
     const query =
-      "INSERT INTO orders (pix_address, amount, usdt_amount, status) VALUES (?, ?, ?, ?)";
+      "INSERT INTO orders (merchant, amount, usdt_amount, status) VALUES (?, ?, ?, ?)";
     db.run(query, [pixAddress, amount, usdtAmount, status], function (err) {
       if (err) {
         reject(err);

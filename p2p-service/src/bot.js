@@ -116,7 +116,7 @@ async function sendOrderToProviders(order) {
   for (const provider of providers) {
     await bot.telegram.sendMessage(
       provider.telegram_id,
-      `New order: ${order.amount} BRL (${order.usdt_amount} USDT) to ${order.pix_address}`,
+      `New order: ${order.amount} VND (${order.usdt_amount} USDT) to ${order.merchant}`,
       Markup.inlineKeyboard([
         Markup.button.callback("Accept order", `accept_order:${order.id}`),
       ])

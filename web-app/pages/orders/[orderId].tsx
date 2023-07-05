@@ -195,8 +195,8 @@ const OrderPage: NextPage = () => {
         label={ `Order #${orderId}` }
         content={
           <ContentContainer>
-            <p><Bold>PIX address</Bold>: { order.data.order.pix_address }</p>
-            <p><Bold>Amount</Bold>: { order.data.order.amount } BRL</p>
+            <p><Bold>Merchant</Bold>: { order.data.order.merchant }</p>
+            <p><Bold>Amount</Bold>: { order.data.order.amount } VND</p>
             <p><Bold>Price in USDT</Bold>: { order.data.order.usdt_amount }</p>
             <p><Bold>Status</Bold>: {
               order.data.order.status.charAt(0).toUpperCase() +
