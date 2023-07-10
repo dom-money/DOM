@@ -2,10 +2,10 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { BigNumber } from 'ethers';
 import { renderWithProviders } from '../utils';
-import MainPage from '../../pages/';
-import { useAuthContext } from '../../context/AuthContext';
-import * as useWalletBalance from '../../hooks/useWalletBalance';
-import * as useWealthBalance from '../../hooks/useWealthBalance';
+import MainPage from '@/pages';
+import { useAuthContext } from '@/context/AuthContext';
+import * as useSafeUsdtBalance from '@/hooks/useSafeUsdtBalance';
+import * as useWealthBalance from '@/hooks/useWealthBalance';
 
 const MOCK_ADDRESS = {
   withTransactions: '0x64ff637fb478863b7468bc97d30a5bf3a428a1fa',
@@ -16,7 +16,7 @@ jest.mock('../../context/AuthContext', () => ({
   useAuthContext: jest.fn(),
 }));
 
-jest.mock('../../hooks/useWalletBalance', () => ({
+jest.mock('../../hooks/useSafeUsdtBalance', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
@@ -27,7 +27,7 @@ jest.mock('../../hooks/useWealthBalance', () => ({
 }));
 
 const useAuthContextMock = useAuthContext as jest.Mock;
-const useWalletBalanceMock = useWalletBalance.default as jest.Mock;
+const useSafeUsdtBalanceMock = useSafeUsdtBalance.default as jest.Mock;
 const useWealthBalanceMock = useWealthBalance.default as jest.Mock;
 
 // Setting up mocks
@@ -42,7 +42,7 @@ beforeEach(() => {
       getAddress: () => MOCK_ADDRESS.noTransactions,
     },
   });
-  useWalletBalanceMock.mockReturnValue({
+  useSafeUsdtBalanceMock.mockReturnValue({
     data: {
       balanceAsString: '1000.0',
       balanceAsBigNumber: BigNumber.from(1000 * 1e6),
