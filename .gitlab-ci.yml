@@ -15,7 +15,8 @@ variables:
 cache: &global_cache
   key: $CI_COMMIT_REF_SLUG
   paths:
-    - node_modules/
+    - $WEB_APP_FOLDER/node_modules/
+    - $P2P_SERVICE_FOLDER/node_modules/
   policy: pull-push
 
 
@@ -127,6 +128,8 @@ deploy_app:
     changes:
       - web-app/**/*
 
+  when: manual 
+
 deploy_storybook:
   stage: deploy
 
@@ -150,3 +153,5 @@ deploy_storybook:
       - main
     changes:
       - web-app/**/*
+
+  when: manual 
